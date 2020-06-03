@@ -18,7 +18,7 @@ void Host::initialize() {
     if (strcmp(getName(), "h0_0_0") == 0) {
         cMessage *testMsg = new cMessage("Msg");
         cMsgPar *msgPar = new cMsgPar("dst");
-        msgPar->setStringValue("h1_1_1");
+        msgPar->setStringValue("h1_1_2");
         testMsg->addPar(msgPar);
         send(testMsg, "port$o", 0);
     }

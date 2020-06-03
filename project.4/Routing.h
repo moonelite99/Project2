@@ -1,8 +1,9 @@
 #ifndef ROUTING_H_
 #define ROUTING_H_
-#include <string>
-#include <vector>
-#include <map>
+#include<bits/stdc++.h>
+#include <omnetpp.h>
+
+using namespace std;
 
 class Routing {
 protected:
@@ -11,9 +12,9 @@ protected:
 
     int **conn;
     int size;
-    std::vector<std::vector<std::string>> adjList;
-    std::map<std::string, int> switchesMap;
-    std::map<std::string, int> hostsMap;
+    vector<vector<string>> adjList;
+    map<string, int> switchesMap;
+    map<string, int> hostsMap;
     void init();
     int next(int src, int dst);
     void printPath(int src, int dst);
@@ -23,6 +24,6 @@ public:
     void operator=(const Routing&) = delete;
 
     static Routing* getInstance();
-    std::map<std::string, int> getRoutingTable(const char *srcName);
+    map<string, int> getRoutingTable(const char *srcName);
 };
 #endif /* ROUTING_H_ */
