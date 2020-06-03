@@ -14,6 +14,8 @@ private:
     int ENB_SIZE;
     int EXB_SIZE;
 
+    int busy = 0;
+
     cModule *hosts[3];
 
     queue<cMessage*> ENB[3]; // Entrance Buffer
@@ -46,7 +48,7 @@ void Switch::initialize() {
     hosts[2] = getParentModule()->getModuleByPath(".C");
 
     scheduleAt(0, new cMessage("nextPeriod"));
-    scheduleAt(0.005, new cMessage("sendToHost"));
+    scheduleAt(0, new cMessage("sendToHost"));
 }
 
 void Switch::handleMessage(cMessage *msg) {
@@ -57,6 +59,10 @@ void Switch::handleMessage(cMessage *msg) {
 
     const char *event = msg->getName();
 
+    //Nếu đường truyền rảnh
+    if(strcmp(event, "free") == 0){
+        busy = 0;
+    }
     // Nhận và đếm số gói tin
     if (strcmp(event, "Msg") == 0) {
         int ENBid = msg->getArrivalGate()->getIndex();
@@ -81,13 +87,19 @@ void Switch::handleMessage(cMessage *msg) {
         scheduleAt(simTime() + OPERATION_TIME_PERIOD, msg);
     }
     if (strcmp(event, "sendToHost") == 0){
+        // Nếu đường truyền đang bận
+        if(busy == 1){
+            scheduleAt(simTime() + OPERATION_TIME_PERIOD, msg);
+            return;
+            }
         // EXB -> next hop
-            if (!EXB.empty()){
+        else if (!EXB.empty()){
                 cMessage *sentMsg = EXB.front();
                 EXB.pop();
                 forwardMessage(sentMsg);
+                busy = 1;
             }
-        scheduleAt(simTime() + CHANNEL_DELAY, msg);
+        scheduleAt(simTime() + OPERATION_TIME_PERIOD, msg);
     }
 }
 int Switch::chooseENB() {

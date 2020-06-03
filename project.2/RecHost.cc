@@ -8,7 +8,9 @@ class RecHost: public cSimpleModule {
 private:
     double TIMEOUT;
     double INTERVAL;
+    double CREDIT_DELAY;
 
+    cModule *sw;
     int *receivedMsgCount;
     int arrayLength;
     int intervalCount = 0;
@@ -26,7 +28,8 @@ void RecHost::initialize() {
     // Thiết lập hằng số
     TIMEOUT = getParentModule()->par("TIMEOUT").doubleValue();
     INTERVAL = getParentModule()->par("INTERVAL").doubleValue();
-
+    CREDIT_DELAY = getParentModule()->par("CREDIT_DELAY").doubleValue();
+    sw = getParentModule()->getModuleByPath(".D");
     // Khởi tạo mảng lưu kết quả
     arrayLength = TIMEOUT / INTERVAL;
     receivedMsgCount = new int[arrayLength];
@@ -47,6 +50,8 @@ void RecHost::handleMessage(cMessage *msg) {
         EV << "Switch received Msg id = " << msgId << endl;
         receivedMsgCount[intervalCount]++;
         numReceived++;
+        cMessage *notifMsg = new cMessage("free");
+        sendDirect(notifMsg, CREDIT_DELAY, 0, sw, "notifIn");
         delete msg;
     }
 

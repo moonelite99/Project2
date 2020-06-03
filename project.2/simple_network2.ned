@@ -19,7 +19,8 @@ simple Switch
         int ENB_SIZE = 2;
         double OPERATION_TIME_PERIOD = 0.005;
     gates:
-		input in[];
+		input in[] ;
+		input notifIn @directIn;
 		output out;
 }
 
