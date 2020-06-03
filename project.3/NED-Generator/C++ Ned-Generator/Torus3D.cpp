@@ -158,7 +158,7 @@ network Torus3D
         }
     }
     cout << "}";
-    freopen("ConnectionLists.txt", "w+", stdout);
+    freopen("ConnectionsList.txt", "w+", stdout);
     for(int x = 0; x < K; x++)
         for(int y = 0; y < K; y++)
             for(int z = 0; z < K; z++){
