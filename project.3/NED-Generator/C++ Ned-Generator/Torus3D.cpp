@@ -7,6 +7,7 @@ const int offset = 200;
 const int scale = 200;
 const int sx = 80;
 const int sy = -50;
+string switches[K][K][K];
 int main()
 {
     freopen("Torus3D.ned", "w+", stdout);
@@ -75,6 +76,8 @@ network Torus3D
                      << " <--> Channel <--> "
                      << "sw" << x << "_" << y + 1 << "_" << z << ".port++;" << endl;
                 // switches[x][y][z] <--> switches[x][y + 1][z]
+                switches[x][y][z] += " sw" + to_string(x) + "_" + to_string(y+1) + "_" + to_string(z);
+                switches[x][y+1][z] += " sw" + to_string(x) + "_" + to_string(y) + "_" + to_string(z);
             }
         }
         for (int y = 0; y < K; y++)
@@ -85,6 +88,8 @@ network Torus3D
                      << " <--> Channel <--> "
                      << "sw" << x + 1 << "_" << y << "_" << z << ".port++;" << endl;
                 // switches[x][y][z], switches[x + 1][y][z]
+                switches[x][y][z] += " sw" + to_string(x+1) + "_" + to_string(y) + "_" + to_string(z);
+                switches[x+1][y][z] += " sw" + to_string(x) + "_" + to_string(y) + "_" + to_string(z);
             }
         }
     }
@@ -98,6 +103,8 @@ network Torus3D
                      << " <--> Channel <--> "
                      << "sw" << x << "_" << y << "_" << z + 1 << ".port++;" << endl;
                 //switches[x][y][z], switches[x][y][z + 1]
+                switches[x][y][z] += " sw" + to_string(x) + "_" + to_string(y) + "_" + to_string(z+1);
+                switches[x][y][z+1] += " sw" + to_string(x) + "_" + to_string(y) + "_" + to_string(z);
             }
         }
     }
@@ -110,6 +117,8 @@ network Torus3D
                  << " <--> Channel <--> "
                  << "sw" << x << "_" << K - 1 << "_" << z << ".port++;" << endl;
             //switches[x][0][z], switches[x][K - 1][z]
+            switches[x][0][z] +=" sw" + to_string(x) + "_" + to_string(K-1) + "_" + to_string(z);
+            switches[x][K-1][z] +=" sw" + to_string(x) + "_" + to_string(0) + "_" + to_string(z);
         }
         for (int y = 0; y < K; y++)
         {
@@ -117,6 +126,8 @@ network Torus3D
                  << " <--> Channel <--> "
                  << "sw" << K - 1 << "_" << y << "_" << z << ".port++;" << endl;
             //switches[0][y][z], switches[K - 1][y][z]
+            switches[0][y][z] +=" sw" + to_string(K-1) + "_" + to_string(y) + "_" + to_string(z);
+            switches[K-1][y][z] +=" sw" + to_string(0) + "_" + to_string(y) + "_" + to_string(z);
         }
     }
     for (int x = 0; x < K; x++)
@@ -127,6 +138,8 @@ network Torus3D
                  << " <--> Channel <--> "
                  << "sw" << x << "_" << y << "_" << K - 1 << ".port++;" << endl;
             //switches[x][y][0], switches[x][y][K - 1]
+            switches[x][y][0] +=" sw" + to_string(x) + "_" + to_string(y) + "_" + to_string(K-1);
+            switches[x][y][K-1] +=" sw" + to_string(x) + "_" + to_string(y) + "_" + to_string(0);
         }
     }
     //Switch to Host
@@ -140,9 +153,16 @@ network Torus3D
                      << " <--> Channel <--> "
                      << "h" << x << "_" << y << "_" << z << ".port++;" << endl;
                 //switches[x][y][z], hosts[x][y][z]
+                switches[x][y][z] +=" h" + to_string(x) + "_" + to_string(y) + "_" + to_string(z);
             }
         }
     }
     cout << "}";
+    freopen("ConnectionLists.txt", "w+", stdout);
+    for(int x = 0; x < K; x++)
+        for(int y = 0; y < K; y++)
+            for(int z = 0; z < K; z++){
+                cout << "sw" << x << "_" << y << "_" << z << switches[x][y][z] << endl;
+            }
     return 0;
 }
