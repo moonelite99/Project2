@@ -42,7 +42,7 @@ network Torus3D
             for (int z = 0; z < K; z++)
             {
                 cout << "\t\t sw" << x << "_" << y << "_" << z 
-                << ": Switch { @display(\"p = " << offset + z * sx + x * scale << "," 
+                << ": Switch { @display(\"p=" << offset + z * sx + x * scale << "," 
                 << offset + z * sy + y * scale << ";i=device/switch\"); } \n";
             }
         }
@@ -55,7 +55,7 @@ network Torus3D
             for (int z = 0; z < K; z++)
             {
                 cout << "\t\t h" << x << "_" << y << "_" << z 
-                << ": Host { @display(\"p = " << offset + z * sx + x * scale - 30 << "," 
+                << ": Host { @display(\"p=" << offset + z * sx + x * scale - 30 << "," 
                 << offset + z * sy + y * scale - 30 << ";i=device/server;is=s\"); } \n";
             }
         }
